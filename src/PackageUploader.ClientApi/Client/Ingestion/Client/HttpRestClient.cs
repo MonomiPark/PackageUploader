@@ -55,11 +55,11 @@ internal abstract class HttpRestClient : IHttpRestClient
             if (response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.MovedPermanently or HttpStatusCode.Found 
                 or HttpStatusCode.SeeOther or HttpStatusCode.TemporaryRedirect)
             {
-                string redirectUrl = response.Headers.Location?.ToString();
+                string redirectUrl = response.Headers.Location?.AbsolutePath;
                 var redirectRequest = CreateJsonRequestMessage(HttpMethod.Get, redirectUrl);
 
                 await LogRequestVerboseAsync(redirectRequest, ct).ConfigureAwait(false);
-                using var redirectResponse = await _httpClient.SendAsync(request, ct).ConfigureAwait(false);
+                using var redirectResponse = await _httpClient.SendAsync(redirectRequest, ct).ConfigureAwait(false);
                 await LogResponseVerboseAsync(redirectResponse, ct).ConfigureAwait(false);
                 redirectResponse.EnsureSuccessStatusCode();
                 

@@ -55,7 +55,7 @@ internal abstract class HttpRestClient : IHttpRestClient
             if (response.StatusCode is HttpStatusCode.Redirect or HttpStatusCode.MovedPermanently or HttpStatusCode.Found 
                 or HttpStatusCode.SeeOther or HttpStatusCode.TemporaryRedirect)
             {
-                string redirectUrl = response.Headers.Location?.AbsolutePath;
+                string redirectUrl = response.Headers.Location?.AbsoluteUri;
                 var redirectRequest = CreateJsonRequestMessage(HttpMethod.Get, redirectUrl);
 
                 await LogRequestVerboseAsync(redirectRequest, ct).ConfigureAwait(false);
